@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <style>
+    :root{
+      --bg:#120e0c;
+      --bg2:#1b1411;
+      --card:#211915;
+      --card2:#2a201a;
+      --text:#f5eee8;
+      --muted:#b9aa9e;
+      --line:rgba(190,145,108,.18);
+      --dark:#0d0b0a;
+      --brown:#765039;
+      --brown2:#9b6b49;
+      --accent:#b88762;
+      --accentSoft:#3a2a21;
+      --shadow:0 14px 34px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(180deg,#0f0c0a 0%,#17110e 48%,#211710 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Tahoma,sans-serif;color:var(--text);position:relative;min-height:100vh}
+    button,input,select,textarea{font:inherit}.app{max-width:900px;margin:auto;padding:14px 12px 28px}
+    .hero{background:linear-gradient(135deg,#0b0a09 0%,#231914 58%,#4b3326 100%);color:#fff;padding:18px;border-radius:22px;box-shadow:0 16px 42px rgba(0,0,0,.38);margin-bottom:13px;border:1px solid rgba(184,135,98,.22)}
+    .heroTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.hero h1{font-size:1.4rem;margin:0 0 4px}.hero p{margin:0;color:#d8c9bd;font-size:.86rem}
+    .infoBtn{border:1px solid rgba(184,135,98,.34);background:rgba(184,135,98,.10);color:#f8f1eb;border-radius:11px;padding:8px 10px;font-weight:800;white-space:nowrap;cursor:pointer}
+    .nextHero{margin-top:14px;background:linear-gradient(145deg,#32241d,#251b16);color:var(--text);border-radius:16px;padding:14px;border:1px solid rgba(184,135,98,.26);box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}.nextHero small{display:block;color:#c7b5a7;font-weight:700;margin-bottom:4px}.nextHero strong{display:block;font-size:1.48rem;line-height:1.2;color:#fff}.nextMeta{margin-top:6px;color:#d0b7a3;font-size:.83rem}.nextDue{margin-top:10px;padding:9px 10px;border-radius:11px;background:#1a1411;border:1px solid rgba(184,135,98,.20);font-size:.88rem;font-weight:800;color:#f1dfcf}.nextDue .dueLabel{color:#c7ab96;font-weight:700;margin-right:5px}.nextDue.overdue{background:#342019;border-color:#8e513f;color:#ffd6c4}.nextDue.missing{font-weight:700;color:#d1b9a7}
+    .metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}.metric{background:rgba(255,255,255,.045);border-radius:13px;padding:10px;border:1px solid rgba(184,135,98,.14)}.metric small{display:block;color:#c9b9ad;margin-bottom:3px}.metric strong{font-size:1rem;color:#fff}
+    .progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:12px}.progress>div{height:100%;background:linear-gradient(90deg,#8a5c3c,#c18c65);width:0}.progressText{margin-top:6px;color:#bfaea1;font-size:.76rem}
+    .card{background:linear-gradient(145deg,rgba(35,27,23,.98),rgba(28,22,19,.98));border-radius:17px;padding:15px;box-shadow:var(--shadow);margin-bottom:12px;border:1px solid rgba(184,135,98,.14)}.card h2{font-size:1.05rem;margin:0 0 11px;color:#fff}
+    label{display:block;color:var(--muted);font-size:.78rem;margin:0 0 5px}input,select,textarea{width:100%;border:1px solid rgba(184,135,98,.19);border-radius:11px;padding:10px 11px;background:#15110f;color:#f7f1ec;outline:none}input::placeholder,textarea::placeholder{color:#786b62}select{color-scheme:dark}input:focus,select:focus,textarea:focus{border-color:#a97958;box-shadow:0 0 0 3px rgba(169,121,88,.13)}textarea{min-height:82px;resize:vertical}
+    .kmEdit{display:grid;grid-template-columns:1fr auto;gap:8px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}.dark{background:#0c0b0a;color:#fff;border:1px solid rgba(184,135,98,.16)}.green{background:linear-gradient(135deg,#8b5e3c,#a97855);color:#fff}.soft{background:#35271f;color:#e9ddd4;border:1px solid rgba(184,135,98,.14)}.danger{background:#43241f;color:#f2c1b5;border:1px solid rgba(185,90,67,.2)}.hint{font-size:.76rem;color:var(--muted);margin:7px 0 0}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.sum{background:#171310;padding:10px;border-radius:11px;border:1px solid rgba(184,135,98,.11)}.sum small{display:block;color:#a99b90;font-size:.72rem}.sum strong{display:block;margin-top:3px;font-size:.96rem;color:#fff}
+    .filters{display:flex;gap:7px;overflow:auto}.filter{border:1px solid rgba(184,135,98,.10);border-radius:11px;background:#2a211c;padding:10px 12px;font-weight:700;white-space:nowrap;color:#d9c9bd;cursor:pointer}.filter.active{background:linear-gradient(135deg,#6e4933,#8b5e3c);color:#fff;border-color:rgba(200,151,115,.30)}.filter.primary{font-weight:900}
+    .list{display:grid;gap:11px}.service{background:linear-gradient(145deg,#211915,#1b1613);border:1px solid rgba(184,135,98,.12);border-radius:16px;padding:13px}.service.done{background:linear-gradient(145deg,#282019,#211914);border-color:rgba(166,123,89,.28)}.service.next{outline:2px solid #8f6245;box-shadow:0 0 0 4px rgba(143,98,69,.08)}.service.hidden{display:none}
+    .head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.km{font-weight:800;color:#fff}.badge{font-size:.72rem;font-weight:800;border-radius:99px;padding:4px 8px;white-space:nowrap}.pending{background:#30251e;color:#bca99b}.doneBadge{background:#3d2d22;color:#d6b99f}.nextBadge{background:#81563b;color:#fff}
+    .budget{margin:9px 0;background:#171310;border-radius:11px;padding:9px 10px;font-size:.84rem;border:1px solid rgba(184,135,98,.09);color:#cdbdb1}.budget strong{font-size:.92rem;color:#fff}.tasks{margin:7px 0 11px;padding-left:19px;color:#d6c7bc;font-size:.88rem}.tasks li{margin:3px 0}
+    .check{display:flex;gap:9px;align-items:center;background:#171310;padding:9px;border-radius:11px;margin-bottom:9px;border:1px solid rgba(184,135,98,.08)}.check input{width:21px;height:21px;accent-color:#9a6848}.check span{font-weight:700;font-size:.88rem;color:#eee3da}
+    .mini{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.mini label{font-size:.7rem}.note{margin-top:7px}
+    .status{position:fixed;right:12px;top:10px;background:#81563b;color:#fff;border-radius:99px;padding:7px 10px;font-size:.73rem;z-index:80;opacity:0;transform:translateY(-6px);transition:.2s;pointer-events:none}.status.show{opacity:1;transform:none}.status.error{background:#78372d}
+    .loading{padding:35px 10px;text-align:center;color:#a99b90}.errorBox{background:#38201c;color:#f0bdb1;padding:12px;border-radius:12px;border:1px solid rgba(185,90,67,.18)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.70);display:none;align-items:center;justify-content:center;padding:18px;z-index:70}.modal.show{display:flex}.modalCard{width:min(460px,100%);background:#211915;border:1px solid rgba(184,135,98,.18);border-radius:20px;padding:17px;box-shadow:0 24px 70px rgba(0,0,0,.48)}.modalHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.modalHead h3{margin:0;font-size:1.08rem;color:#fff}.closeBtn{border:0;background:#34271f;width:36px;height:36px;border-radius:50%;font-size:1.15rem;cursor:pointer;color:#e8d9cf}.infoRow{padding:11px 0;border-bottom:1px solid rgba(184,135,98,.12)}.infoRow:last-child{border-bottom:0}.infoRow small{display:block;color:var(--muted);margin-bottom:3px}.infoRow strong{font-size:1rem;color:#fff}.modalNote{background:#171310;color:#a99b90;border-radius:11px;padding:9px 10px;font-size:.77rem;margin-top:11px;border:1px solid rgba(184,135,98,.08)}.setupGrid{display:grid;gap:9px}.modalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .extraSection{display:none}.extraSection.show{display:block}.extraHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.extraHeader h2{margin:0}.extraList{display:grid;gap:10px}.extraItem{background:linear-gradient(145deg,#211915,#1b1613);border:1px solid rgba(184,135,98,.12);border-radius:15px;padding:12px}.extraTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.extraTitle{font-weight:850;color:#fff}.extraCategory{display:inline-block;margin-top:5px;background:#3b2b22;color:#d8b99e;border-radius:99px;padding:3px 8px;font-size:.7rem;font-weight:800}.extraCost{font-weight:900;color:#d7ae8e;white-space:nowrap}.extraMeta{margin-top:8px;color:#a99b90;font-size:.78rem;display:flex;gap:9px;flex-wrap:wrap}.extraNote{margin-top:8px;background:#171310;border-radius:10px;padding:8px 9px;color:#bfaea1;font-size:.78rem;border:1px solid rgba(184,135,98,.08)}.extraActions{display:flex;gap:7px;margin-top:9px}.extraActions .btn{padding:8px 10px;font-size:.78rem}.emptyState{text-align:center;padding:28px 14px;color:#a99b90;background:#1b1613;border:1px dashed rgba(184,135,98,.24);border-radius:14px}.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.formGrid .wide{grid-column:1/-1}.extraTotalNote{margin-top:7px;color:#9f9186;font-size:.75rem}.modalCard.wideModal{width:min(560px,100%)}
+    @media(max-width:680px){.mini{grid-template-columns:1fr 1fr}.summary{grid-template-columns:repeat(3,1fr)}.sum{padding:9px 7px}.sum small{font-size:.66rem}.sum strong{font-size:.84rem}.formGrid{grid-template-columns:1fr}.formGrid .wide{grid-column:auto}.hero h1{font-size:1.2rem}.nextHero strong{font-size:1.35rem}.infoBtn{padding:7px 9px;font-size:.82rem}}
+  </style>
+</head>
+<body>
+<div id="status" class="status">บันทึกแล้ว</div>
+<main class="app">
+  <section class="hero">
+    <div class="heroTop">
+      <div><h1>ZONTES 150X Maintenance Log</h1></div>
+      <button class="infoBtn" onclick="openVehicleModal()">ข้อมูลรถ</button>
+    </div>
+
+    <div class="nextHero">
+      <small>รอบเช็คระยะถัดไป</small>
+      <strong id="nextText">กำลังโหลด…</strong>
+      <div id="nextDueText" class="nextDue missing">กำลังคำนวณวันที่…</div>
+      <div id="nextBudgetText" class="nextMeta">—</div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><small>เลขไมล์ปัจจุบัน</small><strong id="currentKmText">—</strong></div>
+      <div class="metric"><small>เหลือถึงรอบถัดไป</small><strong id="distanceHero">—</strong></div>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div><div class="progressText" id="progressText">กำลังโหลดข้อมูล…</div>
+  </section>
+
+  <section class="card">
+    <h2>อัปเดตเลขไมล์ปัจจุบัน</h2>
+    <div class="kmEdit">
+      <input id="currentKm" type="number" min="0" inputmode="numeric" placeholder="0">
+      <button class="btn dark" onclick="saveCurrentMileage()">บันทึก</button>
+      
+    </div>
+    
+  </section>
+
+  <section class="card">
+    <h2>ภาพรวม</h2>
+    <div class="summary">
+      <div class="sum"><small>เช็คระยะ</small><strong id="scheduledCost">—</strong></div>
+      <div class="sum"><small>นอกระยะ</small><strong id="extraCost">—</strong></div>
+      <div class="sum"><small>รวมทั้งหมด</small><strong id="totalCost">—</strong></div>
+    </div>
+    <div class="extraTotalNote"><span id="doneCount">—</span></div>
+  </section>
+
+  <section class="card">
+    <div class="filters">
+      <button class="filter primary active" data-filter="next">รอบถัดไป</button>
+      <button class="filter" data-filter="all">ทั้งหมด</button>
+      <button class="filter" data-filter="pending">ยังไม่ทำ</button>
+      <button class="filter" data-filter="done">ทำแล้ว</button>
+      <button class="filter" data-filter="extra">นอกระยะ</button>
+    </div>
+  </section>
+
+  <section id="serviceList" class="list"><div class="loading">กำลังโหลดข้อมูลจาก Google Sheets…</div></section>
+
+  <section id="extraSection" class="extraSection">
+    <div class="card">
+      <div class="extraHeader">
+        <div><h2>บันทึกนอกระยะ</h2><div class="hint">สำหรับยาง เบรก แบตเตอรี่ ช่วงล่าง งานซ่อม หรือรายการที่ไม่ตรงรอบเช็คระยะ</div></div>
+        <button class="btn dark" onclick="openExtraModal()">+ เพิ่มรายการ</button>
+      </div>
+      <div id="extraList" class="extraList"></div>
+    </div>
+  </section>
+</main>
+
+
+<div id="vehicleModal" class="modal" onclick="backdropClose(event)">
+  <div class="modalCard">
+    <div class="modalHead"><h3 id="vehicleModalTitle">ข้อมูลรถ</h3><button class="closeBtn" onclick="closeVehicleModal()">×</button></div>
+
+    <div id="vehicleView">
+      <div class="infoRow"><small>ชื่อเจ้าของ</small><strong id="viewOwner">—</strong></div>
+      <div class="infoRow"><small>ทะเบียน</small><strong id="viewPlate">—</strong></div>
+      <div class="infoRow"><small>วันที่เริ่มใช้</small><strong id="viewStartDate">—</strong></div>
+      <div class="modalNote">ข้อมูล 3 รายการนี้แสดงอย่างเดียวใน WebApp หากต้องการแก้ไขภายหลัง ให้แก้ในชีต “รถ” ช่อง B4–B6</div>
+    </div>
+
+    <div id="vehicleSetup" style="display:none">
+      <div class="setupGrid">
+        <div><label>ชื่อเจ้าของ</label><input id="setupOwner" placeholder="ชื่อเจ้าของรถ"></div>
+        <div><label>ทะเบียน</label><input id="setupPlate" placeholder="ทะเบียนรถ"></div>
+        <div><label>วันที่เริ่มใช้</label><input id="setupStartDate" type="date"></div>
+      </div>
+      <div class="modalNote">บันทึกจาก WebApp ได้ครั้งแรกเท่านั้น หลังจากมีข้อมูลแล้ว WebApp จะเปลี่ยนเป็นโหมดดูอย่างเดียว</div>
+      <div class="modalActions"><button class="btn soft" onclick="closeVehicleModal()">ยกเลิก</button><button class="btn dark" onclick="saveIdentityOnce()">บันทึกครั้งแรก</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="extraModal" class="modal" onclick="extraBackdropClose(event)">
+  <div class="modalCard wideModal">
+    <div class="modalHead"><h3 id="extraModalTitle">เพิ่มบันทึกนอกระยะ</h3><button class="closeBtn" onclick="closeExtraModal()">×</button></div>
+    <div class="formGrid">
+      <div><label>วันที่</label><input id="extraDate" type="date"></div>
+      <div><label>เลขไมล์</label><input id="extraKm" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+      <div><label>ประเภทงาน</label><select id="extraCategory">
+        <option value="">เลือกประเภทงาน</option>
+        <option>ยาง / ล้อ</option><option>เบรก</option><option>แบตเตอรี่</option><option>โช้ค / ช่วงล่าง</option>
+        <option>เครื่องยนต์</option><option>CVT / ระบบส่งกำลัง</option><option>ของเหลว</option><option>ระบบไฟ</option>
+        <option>ซ่อมทั่วไป</option><option>อื่นๆ</option>
+      </select></div>
+      <div><label>ค่าใช้จ่าย (บาท)</label><input id="extraCostInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0"></div>
+      <div class="wide"><label>รายการที่ทำ</label><input id="extraItem" placeholder="เช่น เปลี่ยนยางหลัง / เปลี่ยนผ้าเบรกหน้า"></div>
+      <div class="wide"><label>ร้าน / ศูนย์</label><input id="extraShop" placeholder="ชื่อร้านหรือศูนย์บริการ"></div>
+      <div class="wide"><label>หมายเหตุ</label><textarea id="extraNote" placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)"></textarea></div>
+    </div>
+    <div class="modalActions"><button class="btn soft" onclick="closeExtraModal()">ยกเลิก</button><button class="btn dark" onclick="saveExtra()">บันทึก</button></div>
+  </div>
+</div>
+
+<div id="confirmServiceModal" class="modal" onclick="confirmBackdropClose(event)">
+  <div class="modalCard" style="max-width:390px">
+    <div class="modalHead"><h3 id="confirmServiceTitle">ยืนยัน</h3><button class="closeBtn" onclick="cancelServiceConfirm()">×</button></div>
+    <div id="confirmServiceText" style="color:#e8d9cf;line-height:1.55;margin:4px 0 14px">ยืนยันรายการนี้หรือไม่?</div>
+    <div class="modalActions">
+      <button class="btn soft" onclick="cancelServiceConfirm()">ยกเลิก</button>
+      <button class="btn dark" onclick="acceptServiceConfirm()">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+/* ===== Netlify bridge =====
+   ทุกอย่างทำงานอยู่ใน Netlify ล้วน ๆ ไม่มี Google Sheet / Apps Script แล้ว
+   หน้าเว็บเรียก Netlify Function เดียว (/.netlify/functions/api)
+   ซึ่งอ่าน/เขียนข้อมูลจริงใน Netlify Blobs
+   โค้ดส่วน UI/การแสดงผลด้านล่างทั้งหมดยังคงเรียกผ่านรูปแบบ
+   google.script.run.withSuccessHandler(...).ชื่อฟังก์ชัน(...) เหมือนเดิมทุกจุด
+   เพื่อไม่ต้องแก้โค้ดฟังก์ชันการทำงานของหน้าเว็บเลย */
+const NETLIFY_CACHE_KEY = 'zontes150x-netlify-cache-v1';
+const NETLIFY_PIN_KEY = 'zontes150x-netlify-pin-v1';
+
+function readNetlifyCache(){
+  try{
+    const raw=localStorage.getItem(NETLIFY_CACHE_KEY);
+    if(!raw)return null;
+    const parsed=JSON.parse(raw);
+    return parsed && parsed.data ? parsed.data : null;
+  }catch(e){ return null; }
+}
+
+function writeNetlifyCache(data){
+  try{
+    localStorage.setItem(NETLIFY_CACHE_KEY,JSON.stringify({
+      savedAt:Date.now(),
+      data:data
+    }));
+  }catch(e){}
+}
+
+function clearNetlifyCache(){
+  try{ localStorage.removeItem(NETLIFY_CACHE_KEY); }catch(e){}
+}
+
+function requestNetlifyPin(force=false){
+  let pin=force?'':(localStorage.getItem(NETLIFY_PIN_KEY)||'');
+  if(pin)return pin;
+  pin=window.prompt('ใส่ PIN สำหรับ ZONTES 150X WebApp');
+  if(pin){
+    pin=String(pin).trim();
+    localStorage.setItem(NETLIFY_PIN_KEY,pin);
+  }
+  return pin||'';
+}
+
+async function netlifyApiFetch(action,args,retry=true){
+  const pin=requestNetlifyPin(false);
+  if(!pin)throw new Error('ยังไม่ได้ระบุ PIN');
+
+  const res=await fetch('/.netlify/functions/api',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:action,args:args||[],pin:pin})
+  });
+
+  let data=null;
+  try{ data=await res.json(); }catch(e){}
+
+  if(res.status===401 && retry){
+    localStorage.removeItem(NETLIFY_PIN_KEY);
+    requestNetlifyPin(true);
+    return netlifyApiFetch(action,args,false);
+  }
+
+  if(!res.ok || !data || data.ok!==true){
+    throw new Error((data&&data.error)||('เชื่อมต่อไม่สำเร็จ ('+res.status+')'));
+  }
+  return data.result;
+}
+
+function createNetlifyRunner(){
+  let success=function(){};
+  let failure=function(){};
+
+  const runner=new Proxy({},{
+    get:function(target,prop){
+      if(prop==='withSuccessHandler'){
+        return function(fn){success=(typeof fn==='function'?fn:function(){});return runner;};
+      }
+      if(prop==='withFailureHandler'){
+        return function(fn){failure=(typeof fn==='function'?fn:function(){});return runner;};
+      }
+
+      return function(...args){
+        const action=String(prop);
+
+        if(action==='getAppData'){
+          const cached=readNetlifyCache();
+          if(cached){
+            setTimeout(function(){success(cached);},0);
+          }
+
+          netlifyApiFetch(action,args)
+            .then(function(result){
+              writeNetlifyCache(result);
+              success(result);
+            })
+            .catch(function(err){
+              if(!cached)failure(err);
+            });
+          return;
+        }
+
+        netlifyApiFetch(action,args)
+          .then(function(result){
+            clearNetlifyCache();
+            success(result);
+          })
+          .catch(failure);
+      };
+    }
+  });
+  return runner;
+}
+
+window.google={script:{}};
+Object.defineProperty(window.google.script,'run',{
+  get:function(){return createNetlifyRunner();}
+});
+/* ===== End Netlify bridge ===== */
+
+let appData={vehicle:{owner:'',plate:'',startDate:'',currentKm:0},records:[],extras:[]};
+let activeFilter='next';
+let extraEditingId='';
+
+function money(n){return Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:2})}
+function num(n){return Number(n||0).toLocaleString('th-TH')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function today(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function displayDate(s){if(!s)return '—';const p=String(s).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:s}
+function identityReady(){return Boolean(appData.vehicle.owner&&appData.vehicle.plate&&appData.vehicle.startDate)}
+function cleanServiceLabel(label){return String(label||'').replace(/\s*\/\s*3\s*เดือน/g,'').trim()}
+function parseLocalDate(s){
+  if(!s)return null;
+  const p=String(s).split('-').map(Number);
+  if(p.length!==3||!p[0]||!p[1]||!p[2])return null;
+  return new Date(p[0],p[1]-1,p[2],12,0,0,0);
+}
+function addMonthsSafe(date,months){
+  if(!date)return null;
+  const d=new Date(date.getTime());
+  const originalDay=d.getDate();
+  d.setDate(1);d.setMonth(d.getMonth()+months);
+  const lastDay=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+  d.setDate(Math.min(originalDay,lastDay));
+  return d;
+}
+function thaiDueDate(date){
+  if(!date)return '—';
+  return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',year:'2-digit'}).format(date);
+}
+function latestServiceDate(){
+  const doneWithDate=appData.records.filter(r=>r.done&&r.date).map(r=>({r,date:parseLocalDate(r.date)})).filter(x=>x.date);
+  if(doneWithDate.length){
+    doneWithDate.sort((a,b)=>b.date-a.date);
+    return {date:doneWithDate[0].date,source:'เช็คระยะล่าสุด'};
+  }
+  const start=parseLocalDate(appData.vehicle.startDate);
+  return start?{date:start,source:'วันที่เริ่มใช้รถ'}:null;
+}
+function getNextDueInfo(){
+  const base=latestServiceDate();
+  if(!base)return null;
+  const due=addMonthsSafe(base.date,3);
+  const now=new Date();now.setHours(0,0,0,0);
+  const compare=new Date(due.getTime());compare.setHours(0,0,0,0);
+  return {due,baseDate:base.date,source:base.source,overdue:now>compare};
+}
+
+function showStatus(text='บันทึกแล้ว',error=false){const el=document.getElementById('status');el.textContent=text;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(showStatus.t);showStatus.t=setTimeout(()=>el.classList.remove('show'),1600)}
+function fail(err){console.error(err);showStatus((err&&err.message)||'เกิดข้อผิดพลาด',true)}
+
+function loadApp(){
+  google.script.run.withSuccessHandler(data=>{appData=data;currentKm.value=appData.vehicle.currentKm||'';currentKm.min=Number(appData.vehicle.currentKm||0);render();}).withFailureHandler(err=>{
+    document.getElementById('serviceList').innerHTML='<div class="errorBox">โหลดข้อมูลไม่สำเร็จ: '+esc(err.message||err)+'</div>';fail(err);
+  }).getAppData();
+}
+
+function getNext(){return appData.records.find(r=>!r.done)||null}
+
+function render(){
+  appData.extras=Array.isArray(appData.extras)?appData.extras:[];
+  const next=getNext(),current=Number(appData.vehicle.currentKm||0),done=appData.records.filter(r=>r.done),scheduledTotal=appData.records.reduce((s,r)=>s+Number(r.cost||0),0),extrasTotal=appData.extras.reduce((s,r)=>s+Number(r.cost||0),0),total=scheduledTotal+extrasTotal;
+  currentKmText.textContent=num(current)+' กม.';
+  currentKm.min=current;
+  nextText.textContent=next?cleanServiceLabel(next.label):'ครบ 100,000 กม.';
+  const dueInfo=next?getNextDueInfo():null;
+  nextDueText.classList.remove('overdue','missing');
+  if(!next){
+    nextDueText.textContent='ทำครบทุกระยะที่กำหนดแล้ว';
+  }else if(!dueInfo){
+    nextDueText.textContent='กรุณาระบุวันที่เริ่มใช้รถ เพื่อคำนวณวันนัดหมาย';
+    nextDueText.classList.add('missing');
+  }else{
+    const prefix=dueInfo.overdue?'เลยกำหนด ':'ควรเข้าภายใน ';
+    nextDueText.innerHTML=`<span class="dueLabel">${prefix}</span>${thaiDueDate(dueInfo.due)} <span style="font-size:.76rem;font-weight:600;color:#bfa590">· นับจาก${dueInfo.source} ${thaiDueDate(dueInfo.baseDate)}</span>`;
+    if(dueInfo.overdue)nextDueText.classList.add('overdue');
+  }
+  nextBudgetText.textContent=next?`แนะนำเตรียมประมาณ ${money(next.estimateRecommended)} บาท · ช่วงประเมิน ${money(next.estimateLow)}–${money(next.estimateHigh)} บาท`:'ทำครบทุกระยะที่กำหนดแล้ว';
+  const distance=next?Math.max(0,next.km-current):0;
+  distanceHero.textContent=next?num(distance)+' กม.':'ครบแล้ว';
+  scheduledCost.textContent=money(scheduledTotal)+' บาท';extraCost.textContent=money(extrasTotal)+' บาท';totalCost.textContent=money(total)+' บาท';doneCount.textContent='เช็คระยะแล้ว '+done.length+' รอบ · นอกระยะ '+appData.extras.length+' รายการ';
+  progressText.textContent='ดำเนินการแล้ว '+done.length+' จาก '+appData.records.length+' รอบ';progressBar.style.width=(appData.records.length?Math.round(done.length/appData.records.length*100):0)+'%';
+
+  renderServiceList();
+  if(activeFilter==='extra') renderExtras();
+}
+
+function renderServiceList(){
+  const list=document.getElementById('serviceList');
+  if(!list)return;
+  list.innerHTML='';
+
+  if(activeFilter==='extra'){
+    list.style.display='none';
+    return;
+  }
+
+  list.style.display='grid';
+  const next=getNext();
+
+  let rows=appData.records;
+  if(activeFilter==='next') rows=next?[next]:[];
+  else if(activeFilter==='done') rows=appData.records.filter(r=>r.done);
+  else if(activeFilter==='pending') rows=appData.records.filter(r=>!r.done);
+
+  if(!rows.length){
+    list.innerHTML='<div class="emptyState">ไม่มีรายการในหมวดนี้</div>';
+    return;
+  }
+
+  rows.forEach(r=>{
+    const isNext=next&&next.km===r.km;
+    const status=r.done?'done':(isNext?'next':'pending');
+    const el=document.createElement('article');
+    el.className='service '+(r.done?'done ':'')+(isNext?'next ':'');
+    el.dataset.status=status;
+    el.id='service-'+r.km;
+    const badge=r.done?'<span class="badge doneBadge">ทำแล้ว</span>':isNext?'<span class="badge nextBadge">รอบถัดไป</span>':'<span class="badge pending">รอดำเนินการ</span>';
+    el.innerHTML=`<div class="head"><div class="km">${esc(cleanServiceLabel(r.label))}</div>${badge}</div>
+      <div class="budget">งบประมาณ <strong>${money(r.estimateLow)}–${money(r.estimateHigh)} บาท</strong> · แนะนำเตรียม <strong>${money(r.estimateRecommended)} บาท</strong></div>
+      <ul class="tasks">${r.tasks.map(t=>'<li>'+esc(t)+'</li>').join('')}</ul>
+      <div class="check"><input type="checkbox" ${r.done?'checked':''} onchange="requestServiceConfirm(${r.km},this)"><span>เช็คระยะรอบนี้เรียบร้อยแล้ว</span></div>
+      <div class="mini">
+        <div><label>วันที่</label><input type="date" value="${esc(r.date||'')}" onchange="updateRecord(${r.km},'date',this.value)"></div>
+        <div><label>เลขไมล์จริง</label><input type="number" min="0" inputmode="numeric" value="${r.actualKm===''?'':esc(r.actualKm)}" placeholder="${r.km}" onchange="updateRecord(${r.km},'actualKm',this.value)"></div>
+        <div><label>จ่ายจริง (บาท)</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${r.cost===''?'':esc(r.cost)}" placeholder="0" onchange="updateRecord(${r.km},'cost',this.value)"></div>
+        <div><label>ศูนย์ / ร้าน</label><input value="${esc(r.shop||'')}" placeholder="ชื่อร้าน" onchange="updateRecord(${r.km},'shop',this.value)"></div>
+      </div>
+      <div class="note"><label>หมายเหตุ</label><input value="${esc(r.note||'')}" placeholder="เช่น เปลี่ยนผ้าเบรกเพิ่ม" onchange="updateRecord(${r.km},'note',this.value)"></div>`;
+    list.appendChild(el);
+  });
+}
+
+function renderExtras(){
+  const list=document.getElementById('extraList');
+  if(!list)return;
+  list.innerHTML='';
+  if(!appData.extras.length){
+    list.innerHTML='<div class="emptyState">ยังไม่มีรายการนอกระยะ<br><small>กด “+ เพิ่มรายการ” เมื่อมีการเปลี่ยนอะไหล่หรือซ่อมนอกตาราง</small></div>';
+    return;
+  }
+  appData.extras.forEach(r=>{
+    const el=document.createElement('div');el.className='extraItem';
+    const meta=[r.date?displayDate(r.date):'',r.km!==''&&r.km!==null?num(r.km)+' กม.':'',r.shop||''].filter(Boolean);
+    el.innerHTML=`<div class="extraTop"><div><div class="extraTitle">${esc(r.item||'—')}</div><span class="extraCategory">${esc(r.category||'อื่นๆ')}</span></div><div class="extraCost">${money(r.cost||0)} บาท</div></div>
+      <div class="extraMeta">${meta.map(x=>'<span>'+esc(x)+'</span>').join('')}</div>
+      ${r.note?'<div class="extraNote">'+esc(r.note)+'</div>':''}
+      <div class="extraActions"><button class="btn soft" onclick="openExtraModal('${esc(r.id)}')">แก้ไข</button><button class="btn danger" onclick="deleteExtra('${esc(r.id)}')">ลบ</button></div>`;
+    list.appendChild(el);
+  });
+}
+
+let pendingServiceConfirm=null;
+
+function requestServiceConfirm(km,checkbox){
+  const r=appData.records.find(x=>x.km===km);
+  if(!r)return;
+  const newValue=checkbox.checked;
+  pendingServiceConfirm={km,newValue,checkbox};
+  confirmServiceTitle.textContent='ยืนยัน';
+  confirmServiceText.textContent=newValue
+    ? `ยืนยันว่าเช็คระยะ ${cleanServiceLabel(r.label)} เรียบร้อยแล้วหรือไม่?`
+    : `ยืนยันว่าต้องการยกเลิกสถานะ “ทำแล้ว” ของ ${cleanServiceLabel(r.label)} หรือไม่?`;
+  confirmServiceModal.classList.add('show');
+}
+
+function cancelServiceConfirm(){
+  if(pendingServiceConfirm){
+    pendingServiceConfirm.checkbox.checked=!pendingServiceConfirm.newValue;
+  }
+  pendingServiceConfirm=null;
+  confirmServiceModal.classList.remove('show');
+}
+
+function acceptServiceConfirm(){
+  if(!pendingServiceConfirm)return;
+  const {km,newValue}=pendingServiceConfirm;
+  pendingServiceConfirm=null;
+  confirmServiceModal.classList.remove('show');
+  updateRecord(km,'done',newValue);
+}
+
+function confirmBackdropClose(e){
+  if(e.target===confirmServiceModal)cancelServiceConfirm();
+}
+
+function updateRecord(km,field,value){
+  const r=appData.records.find(x=>x.km===km);if(!r)return;
+  if(field==='actualKm'||field==='cost')value=value===''?'':Number(value);
+  r[field]=value;
+  if(field==='done'&&value){if(!r.date)r.date=today();if(r.actualKm==='')r.actualKm=Number(appData.vehicle.currentKm||km)||km;}
+  render();showStatus('กำลังบันทึก…');
+  const patch={};patch[field]=value;if(field==='done'&&value){patch.date=r.date;patch.actualKm=r.actualKm;}
+  google.script.run.withSuccessHandler(()=>showStatus('บันทึกแล้ว')).withFailureHandler(fail).saveMaintenanceRecord(km,patch);
+}
+
+function saveCurrentMileage(){
+  const oldValue=Number(appData.vehicle.currentKm||0);
+  const raw=String(currentKm.value??'').trim();
+  const value=Number(raw);
+
+  if(raw===''||!Number.isFinite(value)||value<0){
+    currentKm.value=oldValue||'';
+    showStatus('กรุณาระบุเลขไมล์ให้ถูกต้อง',true);
+    return;
+  }
+
+  // ไม่อนุญาตให้เลขไมล์ย้อนกลับ เพื่อป้องกันการกรอกผิด
+  if(value<oldValue){
+    currentKm.value=oldValue||'';
+    showStatus(`เลขไมล์ต้องไม่ต่ำกว่า ${num(oldValue)} กม.`,true);
+    return;
+  }
+
+  showStatus('กำลังบันทึก…');
+  google.script.run
+    .withSuccessHandler(res=>{
+      appData.vehicle.currentKm=Number(res.currentKm||0);
+      currentKm.value=appData.vehicle.currentKm||'';
+      currentKm.min=appData.vehicle.currentKm;
+      render();
+      showStatus('บันทึกเลขไมล์แล้ว');
+    })
+    .withFailureHandler(err=>{
+      currentKm.value=oldValue||'';
+      currentKm.min=oldValue;
+      fail(err);
+    })
+    .saveCurrentKm(value);
+}
+
+function openVehicleModal(){
+  const ready=identityReady();
+  vehicleModal.classList.add('show');
+  vehicleView.style.display=ready?'block':'none';vehicleSetup.style.display=ready?'none':'block';
+  vehicleModalTitle.textContent=ready?'ข้อมูลรถ':'ตั้งค่าข้อมูลรถครั้งแรก';
+  if(ready){viewOwner.textContent=appData.vehicle.owner||'—';viewPlate.textContent=appData.vehicle.plate||'—';viewStartDate.textContent=displayDate(appData.vehicle.startDate);}
+  else{
+    setupOwner.value=appData.vehicle.owner||'';setupPlate.value=appData.vehicle.plate||'';setupStartDate.value=appData.vehicle.startDate||'';
+    setupOwner.readOnly=Boolean(appData.vehicle.owner);setupPlate.readOnly=Boolean(appData.vehicle.plate);setupStartDate.disabled=Boolean(appData.vehicle.startDate);
+  }
+}
+function closeVehicleModal(){vehicleModal.classList.remove('show')}
+function backdropClose(e){if(e.target===vehicleModal)closeVehicleModal()}
+
+function saveIdentityOnce(){
+  const data={owner:setupOwner.value.trim(),plate:setupPlate.value.trim(),startDate:setupStartDate.value};
+  if(!data.owner||!data.plate||!data.startDate){showStatus('กรุณากรอกข้อมูลรถให้ครบ',true);return;}
+  showStatus('กำลังบันทึก…');
+  google.script.run.withSuccessHandler(vehicle=>{appData.vehicle={...appData.vehicle,...vehicle};closeVehicleModal();render();showStatus('บันทึกข้อมูลรถแล้ว');}).withFailureHandler(fail).saveVehicleIdentityOnce(data);
+}
+
+function openExtraModal(id=''){
+  extraEditingId=id||'';
+  const r=id?appData.extras.find(x=>x.id===id):null;
+  extraModalTitle.textContent=r?'แก้ไขบันทึกนอกระยะ':'เพิ่มบันทึกนอกระยะ';
+  extraDate.value=r?.date||today();
+  extraKm.value=(r&&r.km!=='')?r.km:(appData.vehicle.currentKm||'');
+  extraCategory.value=r?.category||'';
+  extraItem.value=r?.item||'';
+  extraCostInput.value=(r&&r.cost!=='')?r.cost:'';
+  extraShop.value=r?.shop||'';
+  extraNote.value=r?.note||'';
+  extraModal.classList.add('show');
+}
+function closeExtraModal(){extraModal.classList.remove('show');extraEditingId=''}
+function extraBackdropClose(e){if(e.target===extraModal)closeExtraModal()}
+function saveExtra(){
+  const data={id:extraEditingId,date:extraDate.value,km:extraKm.value===''?'':Number(extraKm.value),category:extraCategory.value,item:extraItem.value.trim(),cost:extraCostInput.value===''?'':Number(extraCostInput.value),shop:extraShop.value.trim(),note:extraNote.value.trim()};
+  if(!data.date){showStatus('กรุณาระบุวันที่',true);return}
+  if(!data.category){showStatus('กรุณาเลือกประเภทงาน',true);return}
+  if(!data.item){showStatus('กรุณาระบุรายการที่ทำ',true);return}
+  showStatus('กำลังบันทึก…');
+  google.script.run.withSuccessHandler(()=>{closeExtraModal();showStatus('บันทึกแล้ว');loadApp();}).withFailureHandler(fail).saveExtraRecord(data);
+}
+function deleteExtra(id){
+  const r=appData.extras.find(x=>x.id===id);
+  if(!confirm('ลบรายการ “'+(r?.item||'นี้')+'” ใช่หรือไม่?'))return;
+  showStatus('กำลังลบ…');
+  google.script.run.withSuccessHandler(()=>{showStatus('ลบแล้ว');loadApp();}).withFailureHandler(fail).deleteExtraRecord(id);
+}
+
+document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeFilter=b.dataset.filter;
+  applyFilter();
+}));
+function applyFilter(){
+  const extraMode=activeFilter==='extra';
+  extraSection.classList.toggle('show',extraMode);
+  renderServiceList();
+  if(extraMode)renderExtras();
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeVehicleModal();closeExtraModal();}});
+loadApp();
+</script>
+</body>
+</html>
